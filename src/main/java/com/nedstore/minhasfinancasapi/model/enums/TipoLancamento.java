@@ -1,2 +1,7 @@
-package com.nedstore.minhasfinancasapi.model.enums;public enum TipoLancamento {
+package com.nedstore.minhasfinancasapi.model.enums;
+
+public enum TipoLancamento {
+
+    RECEITA,
+    DESPESA
 }
