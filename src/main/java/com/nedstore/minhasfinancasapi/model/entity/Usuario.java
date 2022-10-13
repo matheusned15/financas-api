@@ -7,15 +7,16 @@ import javax.persistence.*;
 
 
 @Entity
-@Getter
-@Setter
+@Table( name = "usuario" , schema = "financas")
 @Builder
-@Table(name = "usuario", schema = "financas")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Usuario {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long id;
 
     @Column(name = "nome")
@@ -27,8 +28,4 @@ public class Usuario {
     @Column(name = "senha")
     @JsonIgnore
     private String senha;
-
-    public Usuario() {
-
-    }
 }

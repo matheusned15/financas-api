@@ -12,13 +12,12 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 
-@Getter
-@Setter
-@Entity
-@Builder
-@ToString
-@RequiredArgsConstructor
+@Getter@Entity
 @Table(name = "lancamento", schema = "financas")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Lancamento {
 
     @Id
@@ -53,17 +52,4 @@ public class Lancamento {
     @Column(name = "status")
     @Enumerated(value = EnumType.STRING)
     private StatusLancamento status;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Lancamento that = (Lancamento) o;
-        return id != null && Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }
