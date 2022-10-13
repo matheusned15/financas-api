@@ -3,20 +3,21 @@ package com.nedstore.minhasfinancasapi.model.entity;
 import com.nedstore.minhasfinancasapi.model.enums.StatusLancamento;
 import com.nedstore.minhasfinancasapi.model.enums.TipoLancamento;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 
-@Data
-@Entity
 @Getter
 @Setter
+@Entity
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@ToString
+@RequiredArgsConstructor
 @Table(name = "lancamento", schema = "financas")
 public class Lancamento {
 
@@ -53,4 +54,16 @@ public class Lancamento {
     @Enumerated(value = EnumType.STRING)
     private StatusLancamento status;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Lancamento that = (Lancamento) o;
+        return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

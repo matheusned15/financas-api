@@ -10,10 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "usuario", schema = "financas")
-
 public class Usuario {
 
     @Id
@@ -30,4 +27,8 @@ public class Usuario {
     @Column(name = "senha")
     @JsonIgnore
     private String senha;
+
+    public Usuario() {
+
+    }
 }
