@@ -1,5 +1,6 @@
 package com.nedstore.minhasfinancasapi.service.impl;
 
+import com.nedstore.minhasfinancasapi.exception.ErroAutenticacao;
 import com.nedstore.minhasfinancasapi.exception.RegraNegocioException;
 import com.nedstore.minhasfinancasapi.model.entity.Usuario;
 import com.nedstore.minhasfinancasapi.model.repository.UsuarioRepository;
@@ -13,14 +14,22 @@ import java.util.Optional;
 public class UsuarioServiceImpl implements UsuarioService {
     private UsuarioRepository repository;
 
-    public UsuarioServiceImpl(UsuarioRepository repository){
+    public UsuarioServiceImpl(UsuarioRepository repository) {
         super();
         this.repository = repository;
     }
 
     @Override
     public Usuario autenticar(String email, String senha) {
-        return null;
+        Optional<Usuario> usuario = repository.findByEmail(email);
+
+        if (!usuario.isPresent()) {
+            throw new ErroAutenticacao("Usuário não encontrado para o email informado");
+        }
+        if (!usuario.get().getSenha().equals(senha)) {
+            throw new ErroAutenticacao("Senha inválida");
+        }
+        return usuario.get();
     }
 
     @Override
@@ -34,7 +43,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public void validarEmail(String email) {
         boolean existe = repository.existsByEmail(email);
-        if(existe) {
+        if (existe) {
             throw new RegraNegocioException("Já existe um usuário cadastrado com este email.");
         }
     }
