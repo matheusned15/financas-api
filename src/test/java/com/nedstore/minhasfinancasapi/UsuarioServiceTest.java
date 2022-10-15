@@ -1,12 +1,14 @@
 package com.nedstore.minhasfinancasapi;
 
 import com.nedstore.minhasfinancasapi.exception.RegraNegocioException;
-import com.nedstore.minhasfinancasapi.model.entity.Usuario;
 import com.nedstore.minhasfinancasapi.model.repository.UsuarioRepository;
 import com.nedstore.minhasfinancasapi.service.UsuarioService;
+import com.nedstore.minhasfinancasapi.service.impl.UsuarioServiceImpl;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -26,14 +28,19 @@ public class UsuarioServiceTest {
 
     @Autowired
     UsuarioRepository repository;
+    @BeforeEach
+    public void setUp(){
+        repository = Mockito.mock(UsuarioRepository.class);
+        service = new UsuarioServiceImpl(repository);
+
+    }
 
     @Test()
     public void deveValidarEmail() {
         Assertions.assertDoesNotThrow(() -> {
 
             // cenario
-            repository.deleteAll();
-
+              Mockito.when(repository.existsByEmail(Mockito.anyString())).thenReturn(false);
             // acao
             service.validarEmail(EMAIL);
         });
@@ -41,14 +48,11 @@ public class UsuarioServiceTest {
 
     @Test
     public void deveLancarErroAoValidarEmailQuandoExistirEmailCadastrado() {
-        Assertions.assertThrows(RegraNegocioException.class, () -> {
-            //cenario
-            Usuario usuario = Usuario.builder().nome(NOME).email(EMAIL).build();
-            repository.save(usuario);
+        //cenario
+        Mockito.when(repository.existsByEmail(Mockito.anyString())).thenReturn(true);
 
-            //acao
-            service.validarEmail(EMAIL);
-        });
+        //acao
+        Assertions.assertThrows(RegraNegocioException.class, () -> service.validarEmail("email@email.com"));
     }
 
 }
