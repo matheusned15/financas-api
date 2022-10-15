@@ -5,9 +5,7 @@ import com.nedstore.minhasfinancasapi.exception.RegraNegocioException;
 import com.nedstore.minhasfinancasapi.model.entity.Usuario;
 import com.nedstore.minhasfinancasapi.model.repository.UsuarioRepository;
 import com.nedstore.minhasfinancasapi.service.UsuarioService;
-import com.nedstore.minhasfinancasapi.service.impl.UsuarioServiceImpl;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -29,11 +27,43 @@ public class UsuarioServiceTest {
     @MockBean
     UsuarioRepository repository;
 
-    @BeforeEach
-    public void setUp() {
-        repository = Mockito.mock(UsuarioRepository.class);
-        service = new UsuarioServiceImpl(repository);
+    @Test
+    public void deveSalvarUmUsuario() {
+        //cenário
+        Mockito.doNothing().when(service).validarEmail(Mockito.anyString());
+        Usuario usuario = Usuario.builder()
+                .id(1l)
+                .nome("nome")
+                .email("email@email.com")
+                .senha("senha").build();
 
+        Mockito.when(repository.save(Mockito.any(Usuario.class))).thenReturn(usuario);
+
+        //acao
+        Usuario usuarioSalvo = service.salvarUsuario(new Usuario());
+
+        //verificao
+        Assertions.assertThat(usuarioSalvo).isNotNull();
+        Assertions.assertThat(usuarioSalvo.getId()).isEqualTo(1l);
+        Assertions.assertThat(usuarioSalvo.getNome()).isEqualTo("nome");
+        Assertions.assertThat(usuarioSalvo.getEmail()).isEqualTo("email@email.com");
+        Assertions.assertThat(usuarioSalvo.getSenha()).isEqualTo("senha");
+
+    }
+
+    @Test
+    public void naoDeveSalvarUmUsuarioComEmailJaCadastrado() {
+        //cenario
+        String email = "email@email.com";
+        Usuario usuario = Usuario.builder().email(email).build();
+        Mockito.doThrow(RegraNegocioException.class).when(service).validarEmail(email);
+
+        //acao
+        org.junit.jupiter.api.Assertions
+                .assertThrows(RegraNegocioException.class, () -> service.salvarUsuario(usuario));
+
+        //verificacao
+        Mockito.verify(repository, Mockito.never()).save(usuario);
     }
 
     @Test
@@ -60,7 +90,7 @@ public class UsuarioServiceTest {
         Mockito.when(repository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
 
         //acao
-        Throwable exception = Assertions.catchThrowable( () -> service.autenticar("email@email.com", "senha") );
+        Throwable exception = Assertions.catchThrowable(() -> service.autenticar("email@email.com", "senha"));
 
         //verificacao
         Assertions.assertThat(exception)
@@ -76,7 +106,7 @@ public class UsuarioServiceTest {
         Mockito.when(repository.findByEmail(Mockito.anyString())).thenReturn(Optional.of(usuario));
 
         //acao
-        Throwable exception = Assertions.catchThrowable( () ->  service.autenticar("email@email.com", "123") );
+        Throwable exception = Assertions.catchThrowable(() -> service.autenticar("email@email.com", "123"));
         Assertions.assertThat(exception).isInstanceOf(ErroAutenticacao.class).hasMessage("Senha inválida.");
 
     }
