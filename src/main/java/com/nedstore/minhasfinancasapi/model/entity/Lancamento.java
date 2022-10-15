@@ -3,13 +3,11 @@ package com.nedstore.minhasfinancasapi.model.entity;
 import com.nedstore.minhasfinancasapi.model.enums.StatusLancamento;
 import com.nedstore.minhasfinancasapi.model.enums.TipoLancamento;
 import lombok.*;
-import org.hibernate.Hibernate;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Objects;
 
 
 @Getter@Entity
