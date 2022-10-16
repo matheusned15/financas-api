@@ -5,7 +5,7 @@ import com.nedstore.minhasfinancasapi.exception.ErroAutenticacao;
 import com.nedstore.minhasfinancasapi.exception.RegraNegocioException;
 import com.nedstore.minhasfinancasapi.model.entity.Usuario;
 import com.nedstore.minhasfinancasapi.service.UsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/usuarios")
+@RequiredArgsConstructor
 public class UsuarioResource {
 
-    @Autowired
-    private UsuarioService service;
+    private final UsuarioService service;
 
     @PostMapping("/autenticar")
     public ResponseEntity autenticar(@RequestBody UsuarioDTO dto) {
