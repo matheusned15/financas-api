@@ -1,10 +1,9 @@
-package com.nedstore.minhasfinancasapi;
+package com.nedstore.minhasfinancasapi.service;
 
 import com.nedstore.minhasfinancasapi.exception.ErroAutenticacao;
 import com.nedstore.minhasfinancasapi.exception.RegraNegocioException;
 import com.nedstore.minhasfinancasapi.model.entity.Usuario;
 import com.nedstore.minhasfinancasapi.model.repository.UsuarioRepository;
-import com.nedstore.minhasfinancasapi.service.UsuarioService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
