@@ -20,6 +20,7 @@ public class UsuarioResource {
     @Autowired
     private UsuarioService service;
 
+    @PostMapping("/autenticar")
     public ResponseEntity autenticar(@RequestBody UsuarioDTO dto) {
         try {
             Usuario usuarioAutenticado = service.autenticar(dto.getEmail(), dto.getSenha());
