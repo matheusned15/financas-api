@@ -3,6 +3,7 @@ package resources;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nedstore.minhasfinancasapi.api.dto.UsuarioDTO;
 import com.nedstore.minhasfinancasapi.api.resources.UsuarioResource;
+import com.nedstore.minhasfinancasapi.exception.ErroAutenticacao;
 import com.nedstore.minhasfinancasapi.model.entity.Usuario;
 import com.nedstore.minhasfinancasapi.service.LancamentoService;
 import com.nedstore.minhasfinancasapi.service.UsuarioService;
@@ -63,6 +64,33 @@ public class UsuarioResourceTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("email").value(usuario.getEmail()));
 
 
+
+    }
+
+    @Test
+    public void deveRetornarBadRequestAoObterErroDeAutenticacao() throws Exception {
+        //cenario
+        String email = "usuario@email.com";
+        String senha = "123";
+
+        UsuarioDTO dto = UsuarioDTO.builder().email(email).senha(senha).build();
+        Mockito.when( service.autenticar(email, senha) ).thenThrow(ErroAutenticacao.class);
+
+        String json = new ObjectMapper().writeValueAsString(dto);
+
+        //execucao e verificacao
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post( API.concat("/autenticar") )
+                .accept( JSON )
+                .contentType( JSON )
+                .content(json);
+
+
+        mvc
+                .perform(request)
+                .andExpect( MockMvcResultMatchers.status().isBadRequest()  );
+
+        ;
 
     }
 }
