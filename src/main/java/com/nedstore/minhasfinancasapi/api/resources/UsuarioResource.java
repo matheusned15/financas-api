@@ -1,9 +1,11 @@
 package com.nedstore.minhasfinancasapi.api.resources;
 
+import com.nedstore.minhasfinancasapi.api.dto.TokenDTO;
 import com.nedstore.minhasfinancasapi.api.dto.UsuarioDTO;
 import com.nedstore.minhasfinancasapi.exception.ErroAutenticacao;
 import com.nedstore.minhasfinancasapi.exception.RegraNegocioException;
 import com.nedstore.minhasfinancasapi.model.entity.Usuario;
+import com.nedstore.minhasfinancasapi.service.JwtService;
 import com.nedstore.minhasfinancasapi.service.LancamentoService;
 import com.nedstore.minhasfinancasapi.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -20,15 +22,17 @@ import java.util.Optional;
 public class UsuarioResource {
 
     private final UsuarioService service;
-
     private final LancamentoService lancamentoService;
+    private final JwtService jwtService;
 
     @PostMapping("/autenticar")
-    public ResponseEntity autenticar(@RequestBody UsuarioDTO dto) {
+    public ResponseEntity<?> autenticar( @RequestBody UsuarioDTO dto ) {
         try {
             Usuario usuarioAutenticado = service.autenticar(dto.getEmail(), dto.getSenha());
-            return ResponseEntity.ok(usuarioAutenticado);
-        } catch (ErroAutenticacao e) {
+            String token = jwtService.gerarToken(usuarioAutenticado);
+            TokenDTO tokenDTO = new TokenDTO( usuarioAutenticado.getNome(), token);
+            return ResponseEntity.ok(tokenDTO);
+        }catch (ErroAutenticacao e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
