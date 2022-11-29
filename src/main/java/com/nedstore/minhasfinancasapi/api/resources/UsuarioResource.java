@@ -26,13 +26,13 @@ public class UsuarioResource {
     private final JwtService jwtService;
 
     @PostMapping("/autenticar")
-    public ResponseEntity<?> autenticar( @RequestBody UsuarioDTO dto ) {
+    public ResponseEntity<?> autenticar(@RequestBody UsuarioDTO dto) {
         try {
             Usuario usuarioAutenticado = service.autenticar(dto.getEmail(), dto.getSenha());
             String token = jwtService.gerarToken(usuarioAutenticado);
-            TokenDTO tokenDTO = new TokenDTO( usuarioAutenticado.getNome(), token);
+            TokenDTO tokenDTO = new TokenDTO(usuarioAutenticado.getNome(), token);
             return ResponseEntity.ok(tokenDTO);
-        }catch (ErroAutenticacao e) {
+        } catch (ErroAutenticacao e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -55,11 +55,11 @@ public class UsuarioResource {
     }
 
     @GetMapping("{id}/saldo")
-    public ResponseEntity obterSaldo( @PathVariable("id") Long id ) {
+    public ResponseEntity obterSaldo(@PathVariable("id") Long id) {
         Optional<Usuario> usuario = service.obterPorId(id);
 
-        if(!usuario.isPresent()) {
-            return new ResponseEntity( HttpStatus.NOT_FOUND );
+        if (!usuario.isPresent()) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
         BigDecimal saldo = lancamentoService.obterSaldoPorUsuario(id);

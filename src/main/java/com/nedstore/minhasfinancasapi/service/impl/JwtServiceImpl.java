@@ -65,7 +65,7 @@ public class JwtServiceImpl implements JwtService {
                     .atZone(ZoneId.systemDefault()).toLocalDateTime();
             boolean dataHoraAtualIsAfterDataExpiracao = LocalDateTime.now().isAfter(dataExpiracao);
             return !dataHoraAtualIsAfterDataExpiracao;
-        }catch(ExpiredJwtException e) {
+        } catch (ExpiredJwtException e) {
             return false;
         }
     }

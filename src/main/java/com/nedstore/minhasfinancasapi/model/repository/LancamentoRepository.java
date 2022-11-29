@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public interface LancamentoRepository extends JpaRepository<Lancamento, Long> {
     @Query(value =
             "SELECT SUM(L.valor) FROM Lancamento L JOIN L.usuario U "
-            + "WHERE U.id = :idUsuario AND L.tipo = :tipo and L.status = :status GROUP BY U ")
+                    + "WHERE U.id = :idUsuario AND L.tipo = :tipo and L.status = :status GROUP BY U ")
     BigDecimal obterSaldoPorTipoLancamentoEUsuarioEStatus(
             @Param("idUsuario") Long idUsuario,
             @Param("tipo") TipoLancamento tipo,

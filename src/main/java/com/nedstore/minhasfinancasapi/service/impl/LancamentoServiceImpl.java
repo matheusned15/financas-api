@@ -104,11 +104,11 @@ public class LancamentoServiceImpl implements LancamentoService {
         BigDecimal receitas = repository.obterSaldoPorTipoLancamentoEUsuarioEStatus(id, TipoLancamento.RECEITA, StatusLancamento.EFETIVADO);
         BigDecimal despesas = repository.obterSaldoPorTipoLancamentoEUsuarioEStatus(id, TipoLancamento.DESPESA, StatusLancamento.EFETIVADO);
 
-        if(receitas == null) {
+        if (receitas == null) {
             receitas = BigDecimal.ZERO;
         }
 
-        if(despesas == null) {
+        if (despesas == null) {
             despesas = BigDecimal.ZERO;
         }
 
